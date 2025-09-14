@@ -3,6 +3,8 @@ from sqlmodel import SQLModel,create_engine,Session
 import uvicorn
 from Users import User,BaseUser
 from Departments import Department,DepartmentBase
+from StudentModel import Student,StudentBase
+
 
 app=FastAPI()
 
@@ -29,12 +31,22 @@ async def adddepartment(department:DepartmentBase,session:Session=Depends(getSes
     session.refresh(department_db)
     return department_db
 
+@app.post('/createstudent')
+async def createstudent(student:StudentBase,session:Session=Depends(getSession)):
+    student_db=Student.model_validate(student)
+    session.add(student_db)
+    session.commit()
+    session.refresh(student_db)
+    return student_db
+
 @app.get('/getuser/{id}')
 async def getUser(id:int,session:Session=Depends(getSession)):
     user=session.get(User,id)
     session.commit()
     session.refresh(user)
     return user
+
+
 
 
 if __name__=='__main__':
