@@ -1,11 +1,10 @@
 from fastapi import FastAPI,Depends
-from sqlmodel import SQLModel,create_engine,Session
+from sqlmodel import SQLModel,create_engine,Session,select
 import uvicorn
 from Users import User,BaseUser
 from Departments import Department,DepartmentBase
 from StudentModel import Student,StudentBase
-
-
+from CourcesModel import Course,CoursesBase
 app=FastAPI()
 
 engine=create_engine('sqlite:///attendance.db',echo=True)
@@ -39,6 +38,14 @@ async def createstudent(student:StudentBase,session:Session=Depends(getSession))
     session.refresh(student_db)
     return student_db
 
+@app.post('/addcourse')
+async def addcourse(course:CoursesBase,session:Session=Depends(getSession)):
+    course_db=Course.model_validate(course)
+    session.add(course_db)
+    session.commit()
+    session.refresh(course_db)
+    return course_db
+
 @app.get('/getuser/{id}')
 async def getUser(id:int,session:Session=Depends(getSession)):
     user=session.get(User,id)
@@ -46,7 +53,10 @@ async def getUser(id:int,session:Session=Depends(getSession)):
     session.refresh(user)
     return user
 
-
+@app.get('/getdepartment',response_model=list[Department])
+async def getdepartment(session:Session=Depends(getSession)):
+    department=session.exec(select(Department)).all()
+    return department
 
 
 if __name__=='__main__':
