@@ -1,4 +1,4 @@
-name: Deploy FastAPI Docker to EC2
+name: Deploy FastAPI Code to S3
 
 on:
   push:
