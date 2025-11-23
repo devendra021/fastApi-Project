@@ -4,7 +4,7 @@ from typing import Optional
 from datetime import datetime
 
 class DepartmentBase(SQLModel):
-    depart_name:str
+    department_name:str
     submittedby:str
     updatedat:datetime=Field(default_factory=datetime.now)
 
