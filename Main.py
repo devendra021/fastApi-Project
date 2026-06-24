@@ -7,6 +7,7 @@ from StudentModel import Student,StudentBase
 from CourcesModel import Course,CoursesBase
 app=FastAPI()
 
+#this is updated dev branch
 engine=create_engine('sqlite:///attendance.db',echo=True)
 SQLModel.metadata.create_all(engine)
 
